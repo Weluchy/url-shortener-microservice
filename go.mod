@@ -1,5 +1,4 @@
-module concurrent_map
-
+module url-shortener
 go 1.25.0
 
 require (
