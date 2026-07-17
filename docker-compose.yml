@@ -1,0 +1,29 @@
+name: shortener
+
+services:
+  postgres-db:
+    image: postgres:15-alpine
+    restart: always
+    ports: 
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: secretpassword
+      POSTGRES_DB: shortener
+
+  redis-serv:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    restart: always
+    
+  url-shortener:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - POSTGRES_DSN=postgres://admin:secretpassword@postgres-db:5432/shortener?sslmode=disable
+      - REDIS_ADDR=redis-serv:6379
+    depends_on:
+      - postgres-db
+      - redis-serv
